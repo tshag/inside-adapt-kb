@@ -11,27 +11,27 @@ const nextConfig = {
       {
         source: '/:path*',
         headers: [
-          {
-            key: 'X-Frame-Options',
-            value: 'DENY',
-          },
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff',
-          },
-          {
-            key: 'Referrer-Policy',
-            value: 'strict-origin-when-cross-origin',
-          },
-          {
-            key: 'X-Robots-Tag',
-            value: 'noindex, nofollow',
-          },
+          { key: 'X-Frame-Options', value: 'DENY' },
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+          { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
         ],
       },
-    ]
+    ];
   },
-}
+  // Ensure fs and path aren’t bundled on the client
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.resolve = config.resolve || {};
+      config.resolve.fallback = {
+        ...(config.resolve.fallback || {}),
+        fs: false,
+        path: false,
+      };
+    }
+    return config;
+  },
+};
 
 const withMDX = require('@next/mdx')({
   extension: /\.mdx?$/,
@@ -42,6 +42,6 @@ const withMDX = require('@next/mdx')({
       [require('rehype-autolink-headings'), { behavior: 'wrap' }],
     ],
   },
-})
+});
 
-module.exports = withMDX(nextConfig)
+module.exports = withMDX(nextConfig);
