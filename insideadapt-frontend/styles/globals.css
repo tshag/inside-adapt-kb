@@ -1,0 +1,189 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Adapt Brand Colors */
+  --adapt-primary: #1a5f7a;
+  --adapt-primary-light: #2a8faf;
+  --adapt-secondary: #57c5b6;
+  --adapt-accent: #159895;
+  --adapt-dark: #002b5b;
+  --adapt-light: #e8f6f3;
+  --adapt-gray: #f8fafc;
+  --adapt-text: #1e293b;
+  --adapt-text-muted: #64748b;
+  
+  /* Shadcn/UI Theme Variables */
+  --background: 0 0% 100%;
+  --foreground: 222 47% 11%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 47% 11%;
+  --primary: 195 65% 30%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 168 52% 55%;
+  --secondary-foreground: 222 47% 11%;
+  --muted: 210 40% 96%;
+  --muted-foreground: 215 16% 47%;
+  --accent: 174 75% 34%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 214 32% 91%;
+  --input: 214 32% 91%;
+  --ring: 195 65% 30%;
+  --radius: 0.5rem;
+}
+
+.dark {
+  --background: 222 47% 11%;
+  --foreground: 210 40% 98%;
+  --card: 222 47% 11%;
+  --card-foreground: 210 40% 98%;
+  --popover: 222 47% 11%;
+  --popover-foreground: 210 40% 98%;
+  --primary: 168 52% 55%;
+  --primary-foreground: 222 47% 11%;
+  --secondary: 217 33% 17%;
+  --secondary-foreground: 210 40% 98%;
+  --muted: 217 33% 17%;
+  --muted-foreground: 215 20% 65%;
+  --accent: 174 75% 34%;
+  --accent-foreground: 210 40% 98%;
+  --destructive: 0 63% 31%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 217 33% 17%;
+  --input: 217 33% 17%;
+  --ring: 168 52% 55%;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  .adapt-gradient {
+    background: linear-gradient(135deg, var(--adapt-primary) 0%, var(--adapt-accent) 100%);
+  }
+  
+  .adapt-card {
+    @apply bg-white rounded-xl shadow-sm border border-slate-200/60;
+  }
+  
+  .adapt-button-primary {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-lg font-medium text-white transition-all duration-200;
+    background: linear-gradient(135deg, var(--adapt-primary) 0%, var(--adapt-primary-light) 100%);
+  }
+  
+  .adapt-button-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(26, 95, 122, 0.3);
+  }
+  
+  .adapt-section-title {
+    @apply text-3xl md:text-4xl font-bold tracking-tight;
+    color: var(--adapt-dark);
+  }
+  
+  .prose-adapt h1 {
+    @apply text-3xl font-bold tracking-tight mb-6;
+    color: var(--adapt-dark);
+  }
+  
+  .prose-adapt h2 {
+    @apply text-2xl font-semibold tracking-tight mt-10 mb-4;
+    color: var(--adapt-dark);
+  }
+  
+  .prose-adapt h3 {
+    @apply text-xl font-semibold tracking-tight mt-8 mb-3;
+    color: var(--adapt-text);
+  }
+  
+  .prose-adapt p {
+    @apply text-base leading-7 mb-4;
+    color: var(--adapt-text);
+  }
+  
+  .prose-adapt ul {
+    @apply list-disc pl-6 mb-4 space-y-2;
+  }
+  
+  .prose-adapt ol {
+    @apply list-decimal pl-6 mb-4 space-y-2;
+  }
+  
+  .prose-adapt li {
+    @apply text-base leading-7;
+    color: var(--adapt-text);
+  }
+  
+  .prose-adapt a {
+    @apply text-[var(--adapt-primary)] underline underline-offset-4 hover:text-[var(--adapt-primary-light)] transition-colors;
+  }
+  
+  .prose-adapt blockquote {
+    @apply border-l-4 border-[var(--adapt-secondary)] pl-4 py-2 my-6 bg-slate-50 rounded-r-lg;
+  }
+  
+  .prose-adapt code {
+    @apply px-1.5 py-0.5 rounded text-sm font-mono bg-slate-100;
+  }
+  
+  .prose-adapt pre {
+    @apply p-4 rounded-lg bg-slate-900 text-slate-100 overflow-x-auto my-6;
+  }
+  
+  .prose-adapt pre code {
+    @apply bg-transparent p-0 text-slate-100;
+  }
+  
+  .prose-adapt table {
+    @apply w-full border-collapse my-6;
+  }
+  
+  .prose-adapt th {
+    @apply px-4 py-3 text-left font-semibold bg-slate-50 border-b-2 border-slate-200;
+  }
+  
+  .prose-adapt td {
+    @apply px-4 py-3 border-b border-slate-100;
+  }
+  
+  .billing-badge {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800 border border-amber-200;
+  }
+  
+  .nav-item {
+    @apply flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors;
+  }
+  
+  .nav-item:hover {
+    @apply bg-slate-100;
+  }
+  
+  .nav-item.active {
+    @apply bg-[var(--adapt-light)] text-[var(--adapt-primary)];
+  }
+  
+  .search-input {
+    @apply w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-200 bg-white text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[var(--adapt-primary)]/20 focus:border-[var(--adapt-primary)] transition-all;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
