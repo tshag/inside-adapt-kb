@@ -45,7 +45,7 @@ export const authOptions: NextAuthOptions = {
         }
 
         // Check hosted domain claim if available
-        if (profile.hd && profile.hd !== "adaptwny.com") {
+if ((profile as any).hd && (profile as any).hd !== "adaptwny.com") {
           return false;
         }
 
