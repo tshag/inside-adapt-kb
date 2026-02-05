@@ -33,24 +33,25 @@ export const authOptions: NextAuthOptions = {
     async signIn({ account, profile }) {
       // Validate Google profile
       if (account?.provider === "google") {
-        if (!profile?.email || !profile?.email_verified) {
+        // Cast profile to any so email_verified can be accessed without a type error
+        if (!profile?.email || !(profile as any).email_verified) {
           return false;
         }
-        
+
         // Check domain
         const email = profile.email.toLowerCase();
         if (!email.endsWith("@adaptwny.com")) {
           return false;
         }
-        
+
         // Check hosted domain claim if available
         if (profile.hd && profile.hd !== "adaptwny.com") {
           return false;
         }
-        
+
         return true;
       }
-      
+
       return false;
     },
     async session({ session, user }) {
