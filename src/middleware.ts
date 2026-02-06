@@ -13,6 +13,9 @@ export default withAuth(
     
     // Check if user is authenticated
     if (!token?.email) {
+           if (pathname === "/" || pathname.startsWith("/landing")) {
+        return NextResponse.next();
+      }
       return NextResponse.redirect(new URL("/auth/signin", req.url));
     }
     
@@ -44,7 +47,7 @@ export default withAuth(
     callbacks: {
       authorized({ req, token }) {
         // Require authentication for all routes except public ones
-        const publicPaths = ["/auth/signin", "/auth/error", "/403", "/404"];
+        const publicPaths = ["/", "/landing", "/auth/signin", "/auth/error", "/403", "/404"];
         if (publicPaths.some(path => req.nextUrl.pathname.startsWith(path))) {
           return true;
         }
