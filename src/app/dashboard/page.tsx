@@ -1,6 +1,8 @@
+// src/app/dashboard/page.tsx
 "use client";
 
-import { useState } from "react";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 import Link from "next/link";
 import { 
   BookOpen, 
@@ -12,24 +14,32 @@ import {
   Shield,
   Users,
   Settings,
-  TrendingUp,
   ArrowRight,
   Bell
 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
-interface DashboardPageProps {
-  user?: {
-    name?: string | null;
-    email?: string | null;
-    role?: string;
-  };
-}
+export default function DashboardPage() {
+  const { data: session, status } = useSession();
 
-export default function DashboardPage({ user }: DashboardPageProps) {
-  const [searchOpen, setSearchOpen] = useState(false);
+  // Redirect if not authenticated
+  if (status === "unauthenticated") {
+    redirect("/auth/signin");
+  }
+
+  // Show loading state
+  if (status === "loading") {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--adapt-primary)]"></div>
+      </div>
+    );
+  }
+
+  const user = session?.user;
+  const userRole = user?.role || "member";
 
   const recentUpdates = [
     {
@@ -87,7 +97,7 @@ export default function DashboardPage({ user }: DashboardPageProps) {
   ];
 
   const filteredUpdates = recentUpdates.filter(
-    update => update.access === "all" || user?.role === "billing"
+    update => update.access === "all" || userRole === "billing"
   );
 
   return (
@@ -98,20 +108,20 @@ export default function DashboardPage({ user }: DashboardPageProps) {
           Welcome back, {user?.name?.split(" ")[0] || "there"}
         </h1>
         <p className="text-slate-600">
-          Here&apos;s what&apos;s happening at Adapt Psychiatry
+          Here's what's happening at Adapt Psychiatry
         </p>
       </div>
 
       {/* Search Bar */}
       <div className="mb-8">
-        <button
-          onClick={() => setSearchOpen(true)}
+        <Link
+          href="/search"
           className="w-full max-w-2xl flex items-center gap-3 px-4 py-3 rounded-xl bg-white border border-slate-200 text-left hover:border-[var(--adapt-primary)]/30 hover:shadow-sm transition-all"
         >
           <Search className="w-5 h-5 text-slate-400" />
           <span className="text-slate-400">Search articles, policies, protocols...</span>
           <span className="ml-auto text-xs text-slate-400 hidden sm:inline">⌘K</span>
-        </button>
+        </Link>
       </div>
 
       {/* Quick Links */}
@@ -261,7 +271,7 @@ export default function DashboardPage({ user }: DashboardPageProps) {
               <div className="flex items-center justify-between">
                 <span className="text-sm text-slate-600">Your Role</span>
                 <Badge variant="secondary">
-                  {user?.role === "billing" ? "Billing Team" : "Staff"}
+                  {userRole === "billing" ? "Billing Team" : "Staff"}
                 </Badge>
               </div>
             </CardContent>
@@ -272,7 +282,7 @@ export default function DashboardPage({ user }: DashboardPageProps) {
             <CardContent className="p-5">
               <h3 className="font-semibold mb-2">Need Help?</h3>
               <p className="text-sm text-white/80 mb-4">
-                Can&apos;t find what you&apos;re looking for? Contact IT support.
+                Can't find what you're looking for? Contact IT support.
               </p>
               <Button 
                 variant="secondary" 
