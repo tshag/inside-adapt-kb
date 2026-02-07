@@ -24,11 +24,6 @@ import { Badge } from "@/components/ui/badge";
 export default function DashboardPage() {
   const { data: session, status } = useSession();
 
-  // Redirect if not authenticated
-  if (status === "unauthenticated") {
-    redirect("/auth/signin");
-  }
-
   // Show loading state
   if (status === "loading") {
     return (
