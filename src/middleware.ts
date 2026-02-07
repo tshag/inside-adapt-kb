@@ -1,3 +1,4 @@
+// src/middleware.ts
 import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
 import { canAccessBilling } from "./lib/access";
@@ -6,18 +7,13 @@ import { canAccessBilling } from "./lib/access";
 const BILLING_ROUTES = ["/billing", "/docs/billing"];
 const API_BILLING_ROUTES = ["/api/billing", "/api/search"];
 
+// Exact public paths (not using startsWith)
+const PUBLIC_PATHS = ["/", "/landing", "/auth/signin", "/auth/error", "/403", "/404"];
+
 export default withAuth(
   function middleware(req) {
     const { pathname } = req.nextUrl;
     const { token } = req.nextauth;
-    
-    // Check if user is authenticated
-    if (!token?.email) {
-           if (pathname === "/" || pathname.startsWith("/landing")) {
-        return NextResponse.next();
-      }
-      return NextResponse.redirect(new URL("/auth/signin", req.url));
-    }
     
     // Check billing route access
     const isBillingRoute = BILLING_ROUTES.some(route => 
@@ -28,7 +24,7 @@ export default withAuth(
       pathname.startsWith(route)
     );
     
-    if ((isBillingRoute || isApiBillingRoute) && !canAccessBilling(token.email)) {
+    if ((isBillingRoute || isApiBillingRoute) && token?.email && !canAccessBilling(token.email)) {
       // Return 403 for API routes
       if (pathname.startsWith("/api/")) {
         return NextResponse.json(
@@ -46,11 +42,29 @@ export default withAuth(
   {
     callbacks: {
       authorized({ req, token }) {
-        // Require authentication for all routes except public ones
-        const publicPaths = ["/", "/landing", "/auth/signin", "/auth/error", "/403", "/404"];
-        if (publicPaths.some(path => req.nextUrl.pathname.startsWith(path))) {
+        const { pathname } = req.nextUrl;
+        
+        // Allow exact public paths without authentication
+        if (PUBLIC_PATHS.includes(pathname)) {
           return true;
         }
+        
+        // Allow landing subpaths
+        if (pathname.startsWith("/landing")) {
+          return true;
+        }
+        
+        // Allow auth callback routes
+        if (pathname.startsWith("/api/auth/")) {
+          return true;
+        }
+        
+        // Allow static files
+        if (pathname.startsWith("/_next/") || pathname.startsWith("/static/")) {
+          return true;
+        }
+        
+        // Require authentication for everything else
         return !!token;
       },
     },
