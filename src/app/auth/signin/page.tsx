@@ -1,20 +1,27 @@
 "use client";
 
 import React from "react";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Shield, Lock, Mail } from "lucide-react";
 
 export default function SignInPage() {
   const [isLoading, setIsLoading] = React.useState(false);
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
+  // Redirect if already signed in
+  if (status === "authenticated") {
+    router.push("/dashboard");
+    return null;
+  }
 
   const handleSignIn = async () => {
-  setIsLoading(true);
-  await signIn("google", {
-    callbackUrl: "/dashboard"  // Change from "/" to "/dashboard"
-  });
-}
+    setIsLoading(true);
+    await signIn("google", { callbackUrl: "/dashboard" });
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 p-4">
