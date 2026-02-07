@@ -10,9 +10,11 @@ export default function SignInPage() {
   const [isLoading, setIsLoading] = React.useState(false);
 
   const handleSignIn = async () => {
-    setIsLoading(true);
-    await signIn("google", { callbackUrl: "/" });
-  };
+  setIsLoading(true);
+  await signIn("google", {
+    callbackUrl: "/dashboard"  // Change from "/" to "/dashboard"
+  });
+}
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 p-4">
