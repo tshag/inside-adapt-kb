@@ -12,12 +12,6 @@ export default function SignInPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
 
-  // Redirect if already signed in
-  if (status === "authenticated") {
-    router.push("/dashboard");
-    return null;
-  }
-
   const handleSignIn = async () => {
     setIsLoading(true);
     await signIn("google", { callbackUrl: "/dashboard" });
